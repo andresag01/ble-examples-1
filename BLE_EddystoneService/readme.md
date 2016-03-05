@@ -39,7 +39,7 @@ You can now build for nRF51-based 16K targets.
 It is possible to configure the following EddystoneService parameters by modifying the ``config.json`` file:
 
 - ``default-device-name``: The string that will be advertised as the BLE Device Name while in Eddystone-URL config mode.
-- ``default-url``: The string that will be encoded within Eddystone URL frames.
+- ``default-url``: The string representing a URL that will be encoded within Eddystone URL frames.
 - ``default-url-frame-interval``: The advertising interval of Eddystone URL frames in milliseconds. Setting this parameter to 0 will turn off broadcasts of URL frames.
 - ``default-uid-frame-interval``: The advertising interval of Eddystone UID frames in milliseconds. Setting this parameter to 0 will turn off broadcasts of UID frames.
 - ``default-tlm-frame-interval``: The advertising interval of Eddystone TLM frames in milliseconds. Setting this parameter to 0 will turn off broadcasts of TLM frames.
