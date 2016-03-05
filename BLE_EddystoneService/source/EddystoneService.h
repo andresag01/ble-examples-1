@@ -494,7 +494,10 @@ private:
      */
     void eddystoneConstructorHelper(const PowerLevels_t &advPowerLevelsIn,
                                     const PowerLevels_t &radioPowerLevelsIn,
-                                    uint32_t            advConfigIntervalIn);
+                                    uint32_t            advConfigIntervalIn,
+                                    uint16_t            urlFramePeriodIn = DEFAULT_URL_FRAME_PERIOD_MSEC,
+                                    uint16_t            uidFramePeriodIn = DEFAULT_UID_FRAME_PERIOD_MSEC,
+                                    uint16_t            tlmFramePeriodIn = DEFAULT_TLM_FRAME_PERIOD_MSEC);
 
     /**
      * Helper funtion that will be registered as an initialization complete

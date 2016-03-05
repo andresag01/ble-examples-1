@@ -41,14 +41,18 @@ EddystoneService::EddystoneService(BLE                 &bleIn,
     lockState      = paramsIn.lockState;
     flags          = paramsIn.flags;
     txPowerMode    = paramsIn.txPowerMode;
-    urlFramePeriod = correctAdvertisementPeriod(paramsIn.urlFramePeriod);
-    uidFramePeriod = correctAdvertisementPeriod(paramsIn.uidFramePeriod);
-    tlmFramePeriod = correctAdvertisementPeriod(paramsIn.tlmFramePeriod);
 
     memcpy(lock,   paramsIn.lock,   sizeof(Lock_t));
     memcpy(unlock, paramsIn.unlock, sizeof(Lock_t));
 
-    eddystoneConstructorHelper(paramsIn.advPowerLevels, radioPowerLevelsIn, advConfigIntervalIn);
+    eddystoneConstructorHelper(
+        paramsIn.advPowerLevels,
+        radioPowerLevelsIn,
+        advConfigIntervalIn,
+        paramsIn.urlFramePeriod,
+        paramsIn.uidFramePeriod,
+        paramsIn.tlmFramePeriod
+    );
 }
 
 /* When using this constructor we need to call setURLData,
@@ -69,9 +73,6 @@ EddystoneService::EddystoneService(BLE                 &bleIn,
     unlock(),
     flags(0),
     txPowerMode(0),
-    urlFramePeriod(DEFAULT_URL_FRAME_PERIOD_MSEC),
-    uidFramePeriod(DEFAULT_UID_FRAME_PERIOD_MSEC),
-    tlmFramePeriod(DEFAULT_TLM_FRAME_PERIOD_MSEC),
     rawUrlFrame(NULL),
     rawUidFrame(NULL),
     rawTlmFrame(NULL),
@@ -244,7 +245,10 @@ void EddystoneService::getEddystoneParams(EddystoneParams_t &params)
  */
 void EddystoneService::eddystoneConstructorHelper(const PowerLevels_t &advPowerLevelsIn,
                                                   const PowerLevels_t &radioPowerLevelsIn,
-                                                  uint32_t            advConfigIntervalIn)
+                                                  uint32_t            advConfigIntervalIn,
+                                                  uint16_t            urlFramePeriodIn,
+                                                  uint16_t            uidFramePeriodIn,
+                                                  uint16_t            tlmFramePeriodIn)
 {
     /* We cannot use correctAdvertisementPeriod() for this check because the function
      * call to get the minimum advertising interval in the BLE API is different for
@@ -259,6 +263,14 @@ void EddystoneService::eddystoneConstructorHelper(const PowerLevels_t &advPowerL
             advConfigInterval = advConfigIntervalIn;
         }
     }
+
+    /* All period values come from the user either in the form of
+     * EddystoneServiceParams or through the default values that can be set
+     *  through yotta config. Therefore, everything needs to be checked.
+     */
+    urlFramePeriod = correctAdvertisementPeriod(urlFramePeriodIn);
+    uidFramePeriod = correctAdvertisementPeriod(uidFramePeriodIn);
+    tlmFramePeriod = correctAdvertisementPeriod(tlmFramePeriodIn);
 
     memcpy(radioPowerLevels, radioPowerLevelsIn, sizeof(PowerLevels_t));
     memcpy(advPowerLevels,   advPowerLevelsIn,   sizeof(PowerLevels_t));
@@ -695,7 +707,7 @@ void EddystoneService::onDataWrittenCallback(const GattWriteCallbackParams *writ
         /* Reset characteristics to default values */
         flags          = 0;
         txPowerMode    = TX_POWER_MODE_LOW;
-        urlFramePeriod = DEFAULT_URL_FRAME_PERIOD_MSEC;
+        urlFramePeriod = correctAdvertisementPeriod(DEFAULT_URL_FRAME_PERIOD_MSEC);
 
         urlFrame.setURLData(DEFAULT_URL);
         memset(lock, 0, sizeof(Lock_t));
