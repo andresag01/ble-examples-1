@@ -34,6 +34,17 @@ Because of memory constraints, you can't use the SoftDevice 130 (S130) to build 
 
 You can now build for nRF51-based 16K targets.
 
+### Configuring default values
+
+It is possible to configure the following EddystoneService parameters by modifying the ``config.json`` file:
+
+- ``default-device-name``: The string that will be advertised as the BLE Device Name while in Eddystone-URL config mode.
+- ``default-url``: The string that will be encoded within Eddystone URL frames.
+- ``default-url-frame-interval``: The advertising interval of Eddystone URL frames in milliseconds. Setting this parameter to 0 will turn off broadcasts of URL frames.
+- ``default-uid-frame-interval``: The advertising interval of Eddystone UID frames in milliseconds. Setting this parameter to 0 will turn off broadcasts of UID frames.
+- ``default-tlm-frame-interval``: The advertising interval of Eddystone TLM frames in milliseconds. Setting this parameter to 0 will turn off broadcasts of TLM frames.
+- ``default-eddystone-url-config-adv-interval``: The interval of Eddystone-URL Configuration service advertising packets in milliseconds. Setting this parameter to 0 results in an error if EddystoneService::startConfigService() is called.
+
 ## Setting up the beacon
 
 By default, the beacon directs to the url ``http://mbed.org``. You can change this to your own URL in two ways:
